@@ -6,16 +6,15 @@
 </head>
 <body>
   <div id="app">
-    {{ message }}
+    <ol>
+        <todo-item
+            v-for="item in groceryList"
+            v-bind:todo="item"
+            v-bind:key="item.id"
+        ></todo-item>
+    </ol>
   </div>
 
-  <script>
-    var app = new Vue({
-      el: '#app',
-      data: {
-        message: 'Hello Vue!'
-      }
-    })
-  </script>
+  <script src="./app.js"></script>
 </body>
 </html>
