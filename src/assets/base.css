@@ -1,0 +1,107 @@
+:root {
+  --vt-c-white: #ffffff;
+  --vt-c-white-soft: #f8f8f8;
+  --vt-c-white-mute: #f2f2f2;
+
+  --vt-c-black: #121212;
+  --vt-c-black-soft: #222222;
+  --vt-c-black-mute: #282828;
+
+  --vt-c-blue-200: #84a5f8;
+  --vt-c-blue-500: #004cd5;
+  --vt-c-blue-700: #003bbf;
+  --vt-c-green-200: #84f8d7;
+  --vt-c-green-500: #00e7aa;
+  --vt-c-green-700: #00c28b;
+  --vt-c-pink-200: #f884a5;
+  --vt-c-pink-500: #e5004d;
+  --vt-c-pink-700: #c00048;
+  --vt-c-lavendar-200: #d784f8;
+  --vt-c-lavendar-500: #9e00d5;
+  --vt-c-lavendar-700: #7300ca;
+
+  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
+  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
+  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
+  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+
+  --vt-c-text-light-1: var(--vt-c-black-soft);
+  --vt-c-text-light-2: rgba(60, 60, 60, 0.9);
+  --vt-c-text-dark-1: var(--vt-c-white);
+  --vt-c-text-dark-2: rgba(235, 235, 235, 0.9);
+}
+
+/* semantic color variables for this project */
+:root {
+  --color-background: var(--vt-c-white);
+  --color-background-soft: var(--vt-c-white-soft);
+  --color-background-mute: var(--vt-c-white-mute);
+
+  --color-border: var(--vt-c-divider-light-2);
+  --color-border-hover: var(--vt-c-divider-light-1);
+
+  --color-primary: var(--vt-c-green-500);
+  --color-primary-variant: var(--vt-c-green-700);
+  --color-secondary: var(--vt-c-blue-500);
+  --color-secondary-variant: var(--vt-c-blue-700);
+  --color-error: var(--vt-c-pink-700);
+
+  --color-heading: var(--vt-c-text-light-1);
+  --color-text: var(--vt-c-text-light-1);
+  --color-link: var(--vt-c-blue-500)
+
+  --section-gap: 160px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--vt-c-black);
+    --color-background-soft: var(--vt-c-black-soft);
+    --color-background-mute: var(--vt-c-black-mute);
+
+    --color-border: var(--vt-c-divider-dark-2);
+    --color-border-hover: var(--vt-c-divider-dark-1);
+
+    --color-primary: var(--vt-c-green-200);
+    --color-secondary: var(--vt-c-blue-200);
+    --color-error: var(--vt-c-pink-200);
+
+    --color-heading: var(--vt-c-text-dark-1);
+    --color-text: var(--vt-c-text-dark-2);
+    --color-link: var(--vt-c-blue-200);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  color: var(--color-text);
+  background: var(--color-background);
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.6;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
