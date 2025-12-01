@@ -1,0 +1,1 @@
+import{H as a}from"./Header-B-MjPb4P.js";import{d as r,r as o,c,o as s,a as e,w as m,F as _}from"./index-D6GhMVxa.js";import"./_plugin-vue_export-helper-DlAUqK2U.js";const v=r({__name:"portfolio",setup(p){return(i,l)=>{const n=o("v-container"),t=o("v-main");return s(),c(_,null,[e(a),e(t,null,{default:m(()=>[e(n)]),_:1})],64)}}});export{v as default};
