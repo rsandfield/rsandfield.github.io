@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "types": ["vite-plugin-vue-layouts-next/client"]
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}
