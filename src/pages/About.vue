@@ -27,10 +27,6 @@ import Header from '@/components/Header.vue';
 </template>
 
 <style scoped>
-.body {
-    padding: 4em;
-}
-
 .open {
     font-size: larger;
     font-weight: bolder;
