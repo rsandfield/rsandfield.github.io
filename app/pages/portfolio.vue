@@ -1,11 +1,9 @@
-<script setup lang="ts">
-  import Header from '@/components/Header.vue'
-
+<script lang="ts" setup>
   const items = [
     {
       title: 'Digital Synthesizer',
       text: 'A tool to generate and visualize wave forms of various shapes and wavelengths.',
-      image: 'src/assets/synth.png',
+      image: 'app/assets/synth.png',
     },
   ]
 </script>
