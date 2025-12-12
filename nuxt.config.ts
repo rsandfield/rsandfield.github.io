@@ -4,6 +4,13 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
 
+  nitro: {
+    prerender: {
+      routes: ['/'],
+      ignore: ['/200.html', '/404.html'],
+    },
+  },
+
   // when enabling ssr option you need to disable inlineStyles and maybe devLogs
   features: {
     inlineStyles: false,
