@@ -1,6 +1,5 @@
 import { Vector2 } from "./vector2";
 import { Particle } from "./particle";
-import { Mouse } from "./mouse";
 
 export class Display {
     canvas: HTMLCanvasElement;
@@ -9,21 +8,20 @@ export class Display {
     animationId: number = 0;
 
     particles: Particle[] = [];
-    previous: DOMHighResTimeStamp;
+    previous: DOMHighResTimeStamp = 0;
 
     constructor(canvas: HTMLCanvasElement, container: HTMLElement) {
         this.canvas = canvas;
         this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
         this.container = container;
-        this.previous = performance.now();
+        this.createParticles(100);
 
-        this.particles.push(new Particle(new Vector2(0, 0), new Vector2(2, 1.75)));
-        this.particles.push(new Particle(new Vector2(0, 0), new Vector2(1.1, 0.5)));
+        setInterval(() => {this.simulate()}, 1000 / 60.0);
         this.startAnimation()
     }
 
     resize(entries: ResizeObserverEntry[]) {
-        for (let entry of entries) {
+        for (const entry of entries) {
             if (entry.target == this.container) {
                 const { width, height } = entry.contentRect;
                 this.canvas.width = width;
@@ -31,15 +29,39 @@ export class Display {
             }
         }
     }
-    
-    animate(timestamp: DOMHighResTimeStamp) {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fillStyle = 'green';
-        let duration = timestamp - this.previous
-        this.previous = timestamp
-        const size = new Vector2(this.canvas.width, this.canvas.height)
+
+    createParticles(count: number) {
+        const rect = this.canvas.getBoundingClientRect();
+        const bounds = new Vector2(rect.x * 2.8, rect.y * 2.1);
+        for(let i = 0; i < count; i++) {
+            this.particles.push(new Particle(
+                Vector2.random(bounds),
+                Vector2.random().scaled(100),
+                Math.random() * 5,
+            ))
+        }
+    }
+
+    simulate() {
+        const timestamp = Date.now();
+        if (!this.previous) {
+            this.previous = timestamp;
+            return;
+        }
+
+        const duration = (timestamp - this.previous) * 0.001;
+        this.previous = timestamp;
+        const size = new Vector2(this.canvas.width, this.canvas.height);
+
         this.particles.forEach(particle => {
             particle.advance(duration, size);
+        });
+    }
+    
+    animate() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // console.log(this.particles[0]?.position, this.particles[0]?.velocity)
+        this.particles.forEach(particle => {
             particle.draw(this.ctx);
         });
         this.animationId = requestAnimationFrame(this.animate.bind(this));
