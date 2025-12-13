@@ -1,19 +1,22 @@
 import { parseColor, RGBtoCSS, type Color, type RGB } from "vuetify/lib/util/colorUtils.mjs";
 import type { Vector2 } from "./vector2";
 
+const G = 6.6743 * 10 ** 1; // Actually 10^-11 but that's too small to see here
 const C = 10 ** 5;
 
 export class Particle {
     position: Vector2;
     velocity: Vector2;
-    radius: number;
+    radius: number = 2;
+    mass: number = 1;
     color: RGB;
     age: number = 0;
+    expired: boolean = false;
 
-    constructor(position: Vector2, velocity: Vector2, radius: number = 2, color: Color | null = null) {
+    constructor(position: Vector2, velocity: Vector2, mass: number = 5, color: Color | null = null) {
         this.position = position;
         this.velocity = velocity;
-        this.radius = radius;
+        this.setMass(mass);
         if (color == null) {
             color = {
                 h: Math.random() * 256,
@@ -23,6 +26,52 @@ export class Particle {
             }
         }
         this.color = parseColor(color);
+    }
+
+    setMass(mass: number) {
+        this.mass = mass;
+        this.radius = mass ** (1/3);
+    }
+    
+    interact(other: Particle, duration: number) {
+        if (this.expired) {
+            return;
+        }
+        const relative_position = this.position.subtract(other.position);
+        const relative_velocity = this.velocity.subtract(other.velocity);
+        const total_mass = this.mass + other.mass;
+        const minimum_distance = this.radius + other.radius;
+        if (relative_position.magnitude_squared() === 0) {
+            return;
+        } else if (relative_position.magnitude() < minimum_distance) {
+            if (
+                !other.expired &&
+                this.mass >= other.mass &&
+                relative_velocity.magnitude() < total_mass
+            ) {
+                // Merge
+                this.velocity = this.velocity.scaled(this.mass / total_mass);
+                this.position = this.position.subtract(relative_position.scaled(1 - (this.mass / total_mass)));
+                this.setMass(total_mass);
+                other.expired = true;
+            } else {
+                // Bounce
+                this.velocity = this.velocity.add(
+                    relative_position.normalized().scaled(10 * other.mass / this.mass)
+                );
+                this.position = this.position.add(
+                    relative_position
+                        .normalized()
+                        .scaled((minimum_distance - relative_position.magnitude()) * other.radius / this.radius)
+                );
+            }
+        }
+        const attraction = relative_position.normalized()
+            .scaled((total_mass) / this.mass)
+            .scaled(1 / relative_position.magnitude_squared())
+            .scaled(G)
+            .scaled(duration);
+        this.velocity = this.velocity.subtract(attraction);
     }
 
     advance(duration: number, bounds: Vector2) {

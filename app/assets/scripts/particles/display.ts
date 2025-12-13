@@ -2,6 +2,36 @@ import { Vector2 } from "./vector2";
 import { Particle } from "./particle";
 import { Mouse } from "./mouse";
 
+class Counts {
+    mass: number = 0;
+    count: number = 0;
+    velocity: Vector2 = Vector2.ZERO;
+
+    reset() {
+        this.mass = 0;
+        this.count = 0;
+        this.velocity = Vector2.ZERO;
+    }
+
+    calculate() {
+        this.velocity = this.velocity.scaled(1 / this.mass);
+    }
+
+    draw(ctx: CanvasRenderingContext2D) {
+        ctx.save()
+
+        ctx.fillStyle = 'white';
+        ctx.fillText("Particles:", 10, 20)
+        ctx.fillText(`${this.count}`, 85, 20)
+        ctx.fillText(`Total Mass:`, 10, 35)
+        ctx.fillText(`${this.mass.toFixed(2)}`, 85, 35)
+        ctx.fillText(`Average Vector:`, 10, 50)
+        ctx.fillText(`(${this.velocity.x.toFixed(2)}, ${this.velocity.y.toFixed(2)})`, 85, 50)
+
+        ctx.restore()
+    }
+}
+
 export class Display {
     canvas: HTMLCanvasElement;
     container: HTMLElement;
@@ -11,6 +41,7 @@ export class Display {
     mouse: Mouse = new Mouse();
     particles: Particle[] = [];
     previous: DOMHighResTimeStamp = 0;
+    totals = new Counts();
 
     constructor(canvas: HTMLCanvasElement, container: HTMLElement) {
         this.canvas = canvas;
@@ -39,7 +70,7 @@ export class Display {
             this.particles.push(new Particle(
                 Vector2.random(bounds),
                 Vector2.random().scaled(100),
-                Math.random() * 5,
+                Math.random() * 10,
             ))
         }
     }
@@ -79,10 +110,26 @@ export class Display {
         this.previous = timestamp;
         const size = new Vector2(this.canvas.width, this.canvas.height);
 
+        // Iteractions for all particles
+        this.particles.forEach(particle => {
+            this.particles.forEach(other => {
+                if (particle === other) {
+                    return;
+                }
+                particle.interact(other, duration);
+            });
+        });
+        this.particles = this.particles.filter(particle => !particle.expired)
+
+        this.totals.reset();
         this.mouse.advance(duration);
         this.particles.forEach(particle => {
             particle.advance(duration, size);
+            this.totals.count += 1;
+            this.totals.mass += particle.mass;
+            this.totals.velocity = this.totals.velocity.add(particle.velocity.scaled(particle.mass))
         });
+        this.totals.calculate();
     }
     
     animate() {
@@ -92,6 +139,8 @@ export class Display {
             particle.draw(this.ctx);
         });
         this.mouse.draw(this.ctx);
+        this.totals.draw(this.ctx);
+
         this.animationId = requestAnimationFrame(this.animate.bind(this));
     }
 
