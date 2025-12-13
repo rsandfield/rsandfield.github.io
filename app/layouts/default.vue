@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type AppHeaderVue from '~/components/AppHeader.vue';
-
+//
 </script>
 
 <template>

@@ -19,26 +19,23 @@
 </script>
 
 <template>
-  <Header />
-  <v-main>
-    <v-container>
-      <v-data-table
-        class="data-table"
-        :headers="[{value: 'icon'}, {value: 'link'}]"
-        hide-default-footer
-        hide-default-header
-        :items="items"
-      >
-        <template #item.icon="{ item }">
-          <font-awesome-icon class="icon" :icon="['brands', item.icon]" />
-        </template>
+  <v-container>
+    <v-data-table
+      class="data-table"
+      :headers="[{value: 'icon', width: 70}, {value: 'link'}]"
+      hide-default-footer
+      hide-default-header
+      :items="items"
+    >
+      <template #[`item.icon`]="{ item }">
+        <font-awesome-icon class="icon" :icon="['brands', item.icon]" />
+      </template>
 
-        <template #item.link="{ item }">
-          <a :href="item.link">{{ item.value }}</a>
-        </template>
-      </v-data-table>
-    </v-container>
-  </v-main>
+      <template #[`item.link`]="{ item }">
+        <a :href="item.link">{{ item.value }}</a>
+      </template>
+    </v-data-table>
+  </v-container>
 </template>
 
 <style scoped>

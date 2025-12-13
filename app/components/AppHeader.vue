@@ -1,6 +1,6 @@
 <template>
   <v-app-bar scroll-behavior="hide">
-    <v-app-bar-title>Robert Sandfield</v-app-bar-title>
+    <v-app-bar-title><v-btn variant="plain" to="/">Robert Sandfield</v-btn></v-app-bar-title>
     <template #append>
       <v-btn class="button" to="/portfolio" variant="tonal">Portfolio</v-btn>
       <v-btn class="button" to="/about" variant="tonal">About</v-btn>

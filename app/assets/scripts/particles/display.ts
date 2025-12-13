@@ -101,12 +101,12 @@ export class Display {
 
     simulate() {
         const timestamp = Date.now();
-        if (!this.previous) {
+        const duration = (timestamp - this.previous) * 0.001;
+        if (duration > 1) {
             this.previous = timestamp;
             return;
         }
 
-        const duration = (timestamp - this.previous) * 0.001;
         this.previous = timestamp;
         const size = new Vector2(this.canvas.width, this.canvas.height);
 
