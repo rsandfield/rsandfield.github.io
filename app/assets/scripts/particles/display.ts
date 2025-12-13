@@ -1,5 +1,6 @@
 import { Vector2 } from "./vector2";
 import { Particle } from "./particle";
+import { Mouse } from "./mouse";
 
 export class Display {
     canvas: HTMLCanvasElement;
@@ -7,6 +8,7 @@ export class Display {
     ctx: CanvasRenderingContext2D;
     animationId: number = 0;
 
+    mouse: Mouse = new Mouse();
     particles: Particle[] = [];
     previous: DOMHighResTimeStamp = 0;
 
@@ -42,6 +44,30 @@ export class Display {
         }
     }
 
+    mouseMove(event: MouseEvent) {
+        const rect = this.canvas.getBoundingClientRect();
+        switch(event.type) {
+            case 'mousemove':
+                this.mouse.mouseMove(event, rect);
+                break;
+            case 'mouseenter':
+                this.mouse.active = true;
+                break;
+            case 'mouseleave':
+                this.mouse.active = false;
+                break;
+            case 'mousedown':
+                this.mouse.mouseDown(event, rect);
+                break;
+            case 'mouseup':
+                this.particles.push(new Particle(
+                    this.mouse.position,
+                    this.mouse.mouseUp()
+                ));
+                break;
+        }
+    }
+
     simulate() {
         const timestamp = Date.now();
         if (!this.previous) {
@@ -53,6 +79,7 @@ export class Display {
         this.previous = timestamp;
         const size = new Vector2(this.canvas.width, this.canvas.height);
 
+        this.mouse.advance(duration);
         this.particles.forEach(particle => {
             particle.advance(duration, size);
         });
@@ -64,6 +91,7 @@ export class Display {
         this.particles.forEach(particle => {
             particle.draw(this.ctx);
         });
+        this.mouse.draw(this.ctx);
         this.animationId = requestAnimationFrame(this.animate.bind(this));
     }
 

@@ -8,12 +8,25 @@ onMounted(() => {
   );
   const resizeObserver = new ResizeObserver(display.resize.bind(display));
   resizeObserver.observe(display.container);
+
+  const handler = display.mouseMove.bind(display) as (event: Event) => void;
+  [
+    'click',
+    'dblclick',
+    'mousedown',
+    'mouseup',
+    'mousemove',
+    'mouseover',
+    'mouseout',
+    'mouseenter',
+    'mouseleave',
+  ].forEach(eventType => display.canvas.addEventListener(eventType, handler));
 });
 </script>
 
 <template>
   <div id="container" class="container">
-    <canvas id="display"></canvas>
+    <canvas id="display"/>
     <h1>Software Engineer</h1>
   </div>
 </template>
