@@ -4,11 +4,14 @@ import { Mouse } from "./mouse";
 
 class Counts {
     mass: number = 0;
+    largest: number = 0;
     count: number = 0;
     velocity: Vector2 = Vector2.ZERO;
+    _max_width: number = 0;
 
     reset() {
         this.mass = 0;
+        this.largest = 0;
         this.count = 0;
         this.velocity = Vector2.ZERO;
     }
@@ -20,13 +23,79 @@ class Counts {
     draw(ctx: CanvasRenderingContext2D) {
         ctx.save()
 
+        ctx.translate(10, 20);
+
+        function largest_text_width(array: string[]): number {
+            const widest = array.reduce((acc, item) => {
+                return ctx.measureText(acc).width > ctx.measureText(item).width ? acc : item;
+            });
+            return ctx.measureText(widest).width;
+        }
+
+        const items = [
+            {
+                label: 'Particles:',
+                value: `${this.count}`
+            },
+            {
+                label: 'Total Mass:',
+                value: `${this.mass.toFixed(2)}`
+            },
+            {
+                label: 'Largest Particle:',
+                value: `${this.largest.toFixed(2)} (${(100 * this.largest / this.mass).toFixed(2)}%)`
+            },
+            {
+                label: 'Average Vector:',
+                value: `(${this.velocity.x.toFixed(2)}, ${this.velocity.y.toFixed(2)})`
+            },
+        ]
+
+        const label_width = largest_text_width(items.map(item => item.label));
+        this._max_width = Math.max(this._max_width, largest_text_width(items.map(item => item.value)));
+        const row_height = 15;
+
         ctx.fillStyle = 'white';
-        ctx.fillText("Particles:", 10, 20)
-        ctx.fillText(`${this.count}`, 85, 20)
-        ctx.fillText(`Total Mass:`, 10, 35)
-        ctx.fillText(`${this.mass.toFixed(2)}`, 85, 35)
-        ctx.fillText(`Average Vector:`, 10, 50)
-        ctx.fillText(`(${this.velocity.x.toFixed(2)}, ${this.velocity.y.toFixed(2)})`, 85, 50)
+        items.forEach((item, index: number) => {
+            ctx.fillText(item.label, 0, index * row_height);
+            ctx.fillText(item.value, label_width + 5, index * row_height);
+
+        });
+
+        const right = label_width + this._max_width + 10;
+        const bottom = row_height * (items.length - 1) + 7
+        ctx.strokeStyle = 'white';
+
+        ctx.fillStyle = '#FFFFFF11'
+        ctx.beginPath();
+        ctx.rect(-7, -14, right + 7, bottom + 13);
+        ctx.fill();
+
+        // Upper left
+        ctx.beginPath();
+        ctx.moveTo(-8, 5);
+        ctx.lineTo(-8, -15);
+        ctx.lineTo(12, -15);
+        ctx.arc(2, -5, 10, Math.PI * 1.5, Math.PI, true)
+        
+        // Lower left
+        ctx.moveTo(-8, bottom - 20);
+        ctx.lineTo(-8, bottom);
+        ctx.lineTo(12, bottom);
+        ctx.arc(2, bottom - 10, 10, Math.PI * 0.5, Math.PI)
+        
+        // Lower right
+        ctx.moveTo(right, bottom - 20);
+        ctx.lineTo(right, bottom);
+        ctx.lineTo(right - 20, bottom);
+        ctx.arc(right - 10, bottom - 10, 10, Math.PI * 0.5, 0, true)
+        
+        // Upper right
+        ctx.moveTo(right, 5);
+        ctx.lineTo(right, -15);
+        ctx.lineTo(right - 20, -15);
+        ctx.arc(right - 10, -5, 10, Math.PI * 1.5, 0)
+        ctx.stroke();
 
         ctx.restore()
     }
@@ -127,6 +196,9 @@ export class Display {
             particle.advance(duration, size);
             this.totals.count += 1;
             this.totals.mass += particle.mass;
+            if (particle.mass > this.totals.largest) {
+                this.totals.largest = particle.mass;
+            }
             this.totals.velocity = this.totals.velocity.add(particle.velocity.scaled(particle.mass))
         });
         this.totals.calculate();

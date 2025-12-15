@@ -1,4 +1,4 @@
-import { parseColor, RGBtoCSS, type Color, type RGB } from "vuetify/lib/util/colorUtils.mjs";
+import { HSVtoRGB, parseColor, RGBtoCSS, RGBtoHSV, type Color, type RGB } from "vuetify/lib/util/colorUtils.mjs";
 import type { Vector2 } from "./vector2";
 
 const G = 6.6743 * 10 ** 1; // Actually 10^-11 but that's too small to see here
@@ -128,6 +128,8 @@ export class Particle {
         
         ctx.lineWidth = 0;
         ctx.fillStyle = RGBtoCSS(this.color);
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = this.radius + Math.log(this.radius);
         ctx.beginPath();
         ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
         ctx.fill();
