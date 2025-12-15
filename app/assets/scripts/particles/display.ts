@@ -23,7 +23,7 @@ class Counts {
     draw(ctx: CanvasRenderingContext2D) {
         ctx.save()
 
-        ctx.translate(10, 20);
+        ctx.translate(15, 23);
 
         function largest_text_width(array: string[]): number {
             const widest = array.reduce((acc, item) => {
@@ -180,11 +180,8 @@ export class Display {
         const size = new Vector2(this.canvas.width, this.canvas.height);
 
         // Iteractions for all particles
-        this.particles.forEach(particle => {
-            this.particles.forEach(other => {
-                if (particle === other) {
-                    return;
-                }
+        this.particles.forEach((particle, index) => {
+            this.particles.slice(index + 1).forEach(other => {
                 particle.interact(other, duration);
             });
         });
