@@ -8,6 +8,7 @@ const items = [
     title: 'Digital Synthesizer',
     text: 'A tool to generate and visualize wave forms of various shapes and wavelengths.',
     image: getImageUrl('synth.png'),
+    link: 'https://rsandfield.github.io/audio_generator/',
   },
 ]
 </script>
@@ -20,7 +21,9 @@ const items = [
         :key="item.title"
       >
         <div class="d-flex flex-no-wrap justify-space-between">
-          <img si :src="item.image">
+          <a :href="item.link">
+            <img si :src="item.image" :alt="item.title + ' image'">
+          </a>
           <div>
             <v-card-title>{{ item.title }}</v-card-title>
             <v-card-text>{{ item.text }}</v-card-text>
