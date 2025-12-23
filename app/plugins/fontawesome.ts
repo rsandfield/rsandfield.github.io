@@ -1,4 +1,3 @@
-import type { App } from 'vue'
 import { config, library } from '@fortawesome/fontawesome-svg-core'
 import { faDiscord, faGithub, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'

@@ -10,6 +10,12 @@ const items = [
     image: getImageUrl('synth.png'),
     link: 'https://rsandfield.github.io/audio_generator/',
   },
+  {
+    title: 'Custom Gravty',
+    text: 'A Godot plugin to override extend gravity behavior.',
+    image: getImageUrl('gravity.png'),
+    link: 'https://github.com/rsandfield/gravity',
+  },
 ]
 </script>
 
